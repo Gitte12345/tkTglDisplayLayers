@@ -18,5 +18,31 @@ def tkTglDisplayLayers():
             cmd2 = 'setDisplayLayerVisibility("' + str(layer) + '", ' + str(layerState) + ')'
             mel.eval(cmd2)
 
-tkTglDisplayLayers()
 
+def tkTglDisplayLayersDetail(state):
+    layerList = []
+    if state < 2:
+        displayLayer = cmds.ls(sl=1, type='displayLayer', l=1)
+        for layer in displayLayer:
+            cmds.setAttr(layer + '.levelOfDetail', state)
+
+    if state == 2:
+        displayLayer = cmds.ls(type='displayLayer', l=1)
+        if displayLayer:
+            for layer in displayLayer:
+                split = layer.split(':')
+                if len(split) == 1 and layer != 'defaultLayer':
+                    layerList.append(layer)
+
+    if layerList:
+        levelOfDetail = cmds.getAttr(layerList[0] + '.levelOfDetail')
+        for layer in layerList:
+            cmds.setAttr(layer + '.levelOfDetail', 1-levelOfDetail)
+
+
+
+
+
+# tkTglDisplayLayers()
+# tkTglDisplayLayersDetail(1)
+# tkTglDisplayLayersDetail(2)
